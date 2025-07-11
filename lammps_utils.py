@@ -1,4 +1,4 @@
-import numpy as np, os, sys, tqdm, pandas as pd
+import numpy as np, os, sys, pandas as pd
 
 def extract_data(filename):
     with open(filename, encoding='ISO-8859-1') as file:

@@ -96,7 +96,8 @@ def write_lammps_lattice_parameterized(filename="argon_a_0K.in", verbose=False, 
     boundary p p p
     atom_style atomic
 
-    # ----------- Variables ------------
+    # ----------- Variables ------------   
+    variable lattice equal {params['lattice']}
     variable tmp_obj equal {params['tmp_obj']}
     variable time_step equal {params['time_step']}
     variable dump_file string "{params['dump_file']}"
@@ -110,7 +111,6 @@ def write_lammps_lattice_parameterized(filename="argon_a_0K.in", verbose=False, 
     variable skin equal {params['skin']}
     variable mass equal {params['mass']}
     variable tpotential_lj string "{params['tpotential_lj']}"
-    variable lattice equal {params['lattice']}
 
     # ----------- Lattice and Geometry ------------
     lattice fcc ${{lattice}}
@@ -120,7 +120,7 @@ def write_lammps_lattice_parameterized(filename="argon_a_0K.in", verbose=False, 
 
     # ----------- LJ Potential ------------
     mass 1 ${{mass}}
-    velocity all create ${{tmp_obj}} {params['random_seed']} mom yes rot yes dist gaussian
+    #velocity all create ${{tmp_obj}} {params['random_seed']} mom yes rot yes dist gaussian
     pair_style ${{tpotential_lj}} 8.5125
     pair_coeff 1 1 0.0103 3.405
 
@@ -133,15 +133,15 @@ def write_lammps_lattice_parameterized(filename="argon_a_0K.in", verbose=False, 
     compute pe_atom all pe/atom
     compute ke_atom all ke/atom
     variable etot atom c_pe_atom+c_ke_atom
-    dump 1 all custom 100 dump_NVT/${{lattice}}/${{dump_file}} id type x y z vx vy vz fx fy fz v_etot
+    write_dump 1 all custom 100 dump_NVT/${{lattice}}/${{dump_file}} id type x y z vx vy vz fx fy fz v_etot
 
     # ----------- NVT Simulation ------------
-    thermo 200
-    timestep ${{time_step}}
-    fix 1 all nvt temp ${{tmp_obj}} ${{tmp_obj}} ${{nvt_thermo_freq}} tchain ${{num_chains}} tloop ${{num_mtk}}      
-    run ${{num_step}}
-    unfix 1
-    """
+    #thermo 200
+    #timestep ${{time_step}}
+    #fix 1 all nvt temp ${{tmp_obj}} ${{tmp_obj}} ${{nvt_thermo_freq}} tchain ${{num_chains}} tloop ${{num_mtk}}      
+    #run ${{num_step}}
+    #unfix 1
+    #"""
 
     with open(filename, 'w') as f:
         f.write(lammps_content)
